@@ -7,7 +7,7 @@
             <li class="border-r border-r-gray-400 px-3 hover:text-[#ff4646] cursor-pointer">Cookie Preferences</li>
             <li class="border-r border-r-gray-400 px-3 hover:text-[#ff4646] cursor-pointer">Help</li>
             <li class="border-r border-r-gray-400 px-3 hover:text-[#ff4646] cursor-pointer">Buyer Protection</li>
-            <li class="px-3 hover:text-[#ff4646] cursor-pointer">
+            <li class="px-3 hover:text-[#ff4646] cursor-pointer ">
                 <Icon name="ic:sharp-install-mobile" size="17"/>
                 App
             </li>
