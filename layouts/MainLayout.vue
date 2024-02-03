@@ -40,10 +40,35 @@
                 <NuxtLink to="/" class="min-w-[170px]">
                     <img width="170" src="/AliExpress-logo.png">
                 </NuxtLink>
+                <div class="max-w-[700px] w-full md:block hidden">
+                    <div class="relative">
+                        <div class="flex items-center border-2 border-[#ff4646] rounded-md w-full">
+                            <input type="text" class="placeholder:text-gray-400 w-full text-sm pl-3 focus:outline-none" placeholder="kitchen accessories" v-model="searchItem">
+                            <Icon v-if="isSearching" name="eos-icons:loading" size="25" class="mr-2"/>
+                            <button class="flex items-center h-[100%] p-1.5 px-2 bg-[#ff4646]">
+                                <Icon name="ph:magnifying-glass" size="20" color="#ffffff"/>
+                            </button>
+                        </div>
+                        <div v-if="searchItem.length >2" class="absolute max-w-[700px] bg-white h-auto w-full">
+                            <div class="p-1">
+                                <NuxtLink to="`/item/1`" class="flex items-center justify-between w-full cursor-pointer hover:bg-gray-100">
+                                    <div class="flex items-center">
+                                        <img src="https://picsum.photos/id/82/300/320" width="40" class="rounded-md">
+                                        <div class="truncate ml-2">TESTING</div>
+                                    </div>
+                                    <div class="truncate">$ 98.99</div>
+                                </NuxtLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
 </template>
 <script setup>
 let isAccountMenu = ref(false);
+let searchItem = ref('');
+let isSearching = ref(false);
 </script>
