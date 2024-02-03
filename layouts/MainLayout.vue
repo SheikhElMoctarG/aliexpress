@@ -21,11 +21,16 @@
                     <div v-if="true">
                         <div class="font-semibold text-[15px] my-4 px-3">Welcome to AliExpress!</div>
                         <div class="flex items-center gap-1 px-3 mb-3">
-                            <NuxtLink to="/auth" class="bg-[#ff4646] text-center rounded-sm text-white w-full py-2">
+                            <NuxtLink to="/auth" class="bg-[#ff4646] text-center rounded-sm text-white w-full py-2 text-[16px]">
                                 Login / Register
                             </NuxtLink>
                         </div>
                     </div>
+                    <div class="border-b"/>
+                    <ul class="bg-white">
+                        <li @click="navigateTo('/orders')" class="text-[13px] py-2 px-4 w-full hover:bg-gray-200">My orders</li>
+                        <li v-if="true" class="text-[13px] py-2 px-4 w-full hover:bg-gray-200">Sign out</li>
+                    </ul>
                 </div>
             </li>
             </ul>
