@@ -90,8 +90,11 @@
 
     <div class="lg:pt-[150px] md:pt-[130px] pt-[80px]"/>
         <slot/>
+    <Footer v-if="!userStore.isLoading"/>
 </template>
 <script setup>
+import {useUserStore} from '~/stores/user.js';
+const userStore = useUserStore();
 let isAccountMenu = ref(false);
 let searchItem = ref('');
 let isSearching = ref(false);
