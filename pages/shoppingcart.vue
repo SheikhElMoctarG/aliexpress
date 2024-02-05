@@ -14,6 +14,12 @@
                         <h1 class="text-2xl font-bold capitalize mb-2">shopping cart (0)</h1>
                     </div>
                     <span class="font-bold text-red-600 p-2 bg-red-300/15 rounded-sm my-2">Welcome deal applicable on 1 item only</span>
+
+                    <div id="item" class="bg-white rounded-lg p-4 mt-4">
+                        <div v-for="product of products" :key="product">
+                            <CartItem :product="product" :selectedArray="selectedArray" @selectedRadio="selectedRadioFunc"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -21,4 +27,8 @@
 </template>
 <script setup>
 import MainLayout from '~/layouts/MainLayout.vue';
+const products = [
+  {id: 1, title: 'Title 1', description: 'this is description', url: 'https://picsum.photos/id/70/800/800', price: 999},
+  {id: 2, title: 'Title 2', description: 'this is description', url: 'https://picsum.photos/id/71/800/800', price: 999}
+]
 </script>
