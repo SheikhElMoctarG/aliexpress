@@ -25,4 +25,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['pinia-plugin-persistedstate'],
   },
+  supabase: {
+    redirect: false
+  }
 })
