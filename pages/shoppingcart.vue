@@ -94,6 +94,6 @@ const goToCheckout = ()=> {
     selectedArray.value.forEach(item => ids.push(item.id));
     let res = userStore.cart.filter(item=> ids.indexOf(item.id) != -1);
     res.forEach((item)=> userStore.checkout.push(toRaw(item)))
-    return navigateTo('/checkout')
+    return navigateTo('/checkout');
 }
 </script>
