@@ -8,8 +8,6 @@
         </div>
       </div> 
     </MainLayout>
-    
-    
 </template>
 
 <script setup>
