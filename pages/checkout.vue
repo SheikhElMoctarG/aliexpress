@@ -136,7 +136,37 @@ watch(()=> total.value, ()=> {
 });
 
 const stripeInit = async()=> {
+    const runtimeConfig = useRuntimeConfig();
+    stripe = Stripe(runtimeConfig.public.stripePk);
 
+    const res = await $fetch('/api/stripe/paymentintent', {
+        method: 'POST',
+        body: {
+            amount: total.value
+        }
+    });
+    clientSecret = res.client_secret;
+    elements = stripe.elements();
+    var style = {
+        base: {
+            fontSize: "18px"
+        },
+        invalid: {
+            fontFamily: 'Arial, sans-serif',
+            color: '#ee4b2b',
+            iconColor: '#ee4b2b'
+        }
+    };
+    card = elements.create("card", {
+        hidePostalCode: true,
+        style: style
+    });
+    card.mount('#card-element');
+    card.on('change', function(event) {
+        document.querySelector("button").disabled = event.empty;
+        document.querySelector("#card-error").textContent = event.error ? event.error.message : '';
+    });
+    isProssesing.value = false;
 }
 const pay = async()=> {
 
