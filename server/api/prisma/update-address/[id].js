@@ -3,9 +3,9 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async event => {
     const body = await readBody(event);
-    const res = await prisma.addresses.update({where: {id: event.context.params.id}, data: {name: body.name,
+    const res = await prisma.addresses.update({where: {userId: event.context.params.id, id: body.id}, data: {name: body.name,
         address: body.address,
-        zipcode: body.zipCode,
+        zipcode: body.zipcode,
         city: body.city,
         country: body.country}});
     return res;

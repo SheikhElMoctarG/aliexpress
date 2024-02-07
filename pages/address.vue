@@ -43,12 +43,12 @@ let isWorking = ref(false)
 let error = ref(null)
 
 
-watchEffect(async () => {
-    currentAddress = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`);
+watch(async () => {
+    currentAddress.value = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`);
     if (currentAddress.value) {
-        contactName.value = currentAddress.value.data.contactName;
+        contactName.value = currentAddress.value.data.name;
         address.value = currentAddress.value.data.address;
-        zipCode.value = currentAddress.value.data.zipCode;
+        zipCode.value = currentAddress.value.data.zipcode;
         city.value = currentAddress.value.data.city;
         country.value = currentAddress.value.data.country;
         isUpdate.value = true;
@@ -92,10 +92,10 @@ const submit = async () => {
     }
 
     if (isUpdate.value) {
-        await useFetch(`/api/prisma/update-address/${currentAddress.value.id}`, {
+        await useFetch(`/api/prisma/update-address/${currentAddress.value.data.userId}`, {
             method: 'PATCH',
             body: {
-                userId: user.value.id,
+                id: currentAddress.value.id,
                 name: contactName.value,
                 address: address.value,
                 zipcode: zipCode.value,
