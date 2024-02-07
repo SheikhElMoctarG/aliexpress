@@ -55,16 +55,16 @@ import {useUserStore} from '@/stores/user.js';
 const route = useRoute();
 const userStore = useUserStore();
 const isInCart = computed(()=> {
+    let decide = false;
     userStore.cart.forEach((prod)=> {
         if(route.params.id == prod.id){
-           return true
+           decide = true
         }
     });
-    return false;
+    return decide;
 })
 let currentImage = ref(null);
 let product = ref(null)
-const isProductThere = product.value && product.value.data;
 onBeforeMount(async()=> {
     product.value = await useFetch(`/api/prisma/get-product-by-id/${route.params.id}`);
 })
@@ -92,7 +92,5 @@ let priceComputed = computed(()=> {
 
 function addToCart(){
     userStore.cart.push(product.value.data);
-    alert("added it!");
-    console.log(userStore.cart)
 }
 </script>

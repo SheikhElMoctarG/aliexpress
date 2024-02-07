@@ -57,10 +57,7 @@ onMounted(()=> {
     setTimeout(()=> userStore.isLoading = false, 200);
 });
 
-const products = [
-  {id: 1, title: 'Title 1', description: 'this is description', url: 'https://picsum.photos/id/70/800/800', price: 999},
-  {id: 2, title: 'Title 2', description: 'this is description', url: 'https://picsum.photos/id/71/800/800', price: 999}
-];
+
 const cards = ref([
     '/visa.png',
     '/mastercard.png',

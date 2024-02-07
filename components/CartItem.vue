@@ -55,8 +55,8 @@ let isSelected = ref(false);
 
 const removeFromCart = ()=> {
     userStore.cart.forEach((prod, index)=> {
-        if(prod.id  == product.value.id){
-            userStore.cart.slice(index, 1)
+        if(prod.id  === product.value.id){
+            userStore.cart.splice(index, 1);
         }
     })
 };

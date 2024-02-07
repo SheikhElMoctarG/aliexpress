@@ -124,7 +124,7 @@ watchEffect(()=> {
 
 onMounted(()=> {
     isProssesing.value = true;
-    userStore.cart.forEach((item)=> {
+    userStore.checkout.forEach((item)=> {
         total.value += item.price;
     });
 });

@@ -44,13 +44,13 @@ let error = ref(null)
 
 
 watchEffect(async () => {
-    currentAddress = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`).data;
+    currentAddress = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`);
     if (currentAddress.value) {
-        contactName.value = currentAddress.value.contactName;
-        address.value = currentAddress.value.address;
-        zipCode.value = currentAddress.value.zipCode;
-        city.value = currentAddress.value.city;
-        country.value = currentAddress.value.country;
+        contactName.value = currentAddress.value.data.contactName;
+        address.value = currentAddress.value.data.address;
+        zipCode.value = currentAddress.value.data.zipCode;
+        city.value = currentAddress.value.data.city;
+        country.value = currentAddress.value.data.country;
         isUpdate.value = true;
     }
     userStore.isLoading = false;
