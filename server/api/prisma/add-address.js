@@ -8,7 +8,7 @@ export default defineEventHandler(async event => {
             userId: body.userId,
             name: body.name,
             address: body.address,
-            zipcode: body.zipCode,
+            zipcode: body.zipcode,
             city: body.city,
             country: body.country
         }
