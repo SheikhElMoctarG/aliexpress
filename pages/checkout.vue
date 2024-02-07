@@ -5,7 +5,7 @@
                 <div class="md:w-[65%]">
                     <div class="bg-white rounded-lg p-4">
                         <h1 class="text-xl font-bold mb-2">Shipping Address</h1>
-                        <div v-if="false">
+                        <div v-if="currentAddress && currentAddress.data">
                             <NuxtLink to="/address" class="flex items-center pb-2 text-blue-500 hover:text-red-400 gap-1 capitalize">
                                 <Icon name="mdi:plus" size="18"/>
                                 update address
@@ -16,23 +16,23 @@
                                     
                                     <li class="flex items-center gap-2">
                                         <p>Contact name: </p>
-                                        <p class="font-bold uppercase">Test</p>
-                                    </li>
-                                    <li class="flex items-center gap-2">
-                                        <p>Zip code: </p>
-                                        <p class="font-bold uppercase">Test</p>
+                                        <p class="font-bold uppercase">{{currentAddress.data.name}}</p>
                                     </li>
                                     <li class="flex items-center gap-2">
                                         <p>Address: </p>
-                                        <p class="font-bold uppercase">Test</p>
+                                        <p class="font-bold uppercase">{{currentAddress.data.address}}</p>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <p>Zip code: </p>
+                                        <p class="font-bold uppercase">{{currentAddress.data.zipcode}}</p>
                                     </li>
                                     <li class="flex items-center gap-2">
                                         <p>City: </p>
-                                        <p class="font-bold uppercase">Test</p>
+                                        <p class="font-bold uppercase">{{currentAddress.data.city}}</p>
                                     </li>
                                     <li class="flex items-center gap-2">
                                         <p>Country: </p>
-                                        <p class="font-bold uppercase">Test</p>
+                                        <p class="font-bold uppercase">{{currentAddress.data.country}}</p>
                                     </li>
                                 </ul>
                             </div>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div id="Items" class="bg-white rounded-lg p-4 mt-4">
-                        <div v-for="product in products">
+                        <div v-for="product in userStore.checkout">
                             <CheckoutItem :product="product"/>
                         </div>
                     </div>
@@ -94,6 +94,7 @@
 import MainLayout from '~/layouts/MainLayout.vue';
 import {useUserStore} from '~/stores/user.js';
 const userStore = useUserStore();
+const user = useSupabaseUser();
 const route = useRoute();
 let stripe = null;
 let elements = null;
@@ -103,6 +104,23 @@ let total = ref(0);
 let clientSecret = null;
 let currentAddress = ref(null);
 let isProssesing = ref(false);
+
+onBeforeMount(async()=> {
+    if(userStore.checkout.length < 1){
+        return navigateTo('/shoppingcart')
+    }
+    total.value = 0.00;
+    if(user.value){
+        currentAddress.value = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`);
+        setTimeout(()=> userStore.isLoading = false, 200);
+    }
+})
+
+watchEffect(()=> {
+    if(route.fullPath == '/checkout' && !user.value){
+        return navigateTo('/auth')
+    }
+})
 
 onMounted(()=> {
     isProssesing.value = true;
@@ -129,9 +147,4 @@ const createOrder = async(stripeId)=> {
 const showError = (errorMsgText)=> {
 
 }
-const products = [
-  {id: 8, title: 'this is title', description: 'this is description', url: 'https://picsum.photos/id/73/800/800', price: 999},
-  {id: 9, title: 'this is title', description: 'this is description', url: 'https://picsum.photos/id/73/800/800', price: 999},
-  {id: 10, title: 'this is title', description: 'this is description', url: 'https://picsum.photos/id/73/800/800', price: 999},
-]
 </script>

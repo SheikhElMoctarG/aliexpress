@@ -13,9 +13,9 @@
                     </div>
                 </div>
                 <div class="md:w-[60%] bg-white p-3 rounded-lg">
-                    <div v-if="true" >
-                        <h2 class="mb-2">This is Title!!</h2>
-                        <h4 class="text-[12px] font-light mb-2">My Description</h4>
+                    <div v-if="product && product.data" >
+                        <h2 class="mb-2">{{product.data.title}}</h2>
+                        <h4 class="text-[12px] font-light mb-2">{{product.data.description}}</h4>
                     </div>
                     <div class="flex items-center gap-1 pt-1.5">
                         <span class="flex items-center justify-center bg-[#ffd000] p-1 rounded-full">
@@ -50,27 +50,31 @@
     </MainLayout>
 </template>
 <script setup>
-import { onMounted } from 'vue';
 import MainLayout from '~/layouts/MainLayout.vue';
 import {useUserStore} from '@/stores/user.js';
 const route = useRoute();
 const userStore = useUserStore();
 const isInCart = computed(()=> {
-    let decide = false; 
     userStore.cart.forEach((prod)=> {
         if(route.params.id == prod.id){
-            decide = true;
+           return true
         }
     });
-    return decide;
+    return false;
 })
 let currentImage = ref(null);
-onMounted(() => {
-    watchEffect(() => {
-        currentImage.value = 'https://picsum.photos/id/78/800/800';
-        images.value[0] = 'https://picsum.photos/id/78/800/800'
-    });
+let product = ref(null)
+const isProductThere = product.value && product.value.data;
+onBeforeMount(async()=> {
+    product.value = await useFetch(`/api/prisma/get-product-by-id/${route.params.id}`);
 })
+watchEffect(() => {
+    if(product.value && product.value.data){
+        currentImage.value = product.value.data.url;
+        images.value[0] = product.value.data.url;
+        userStore.isLoading = false;
+    }
+});
 let images = ref([
     'https://picsum.photos/id/78/800/800',
     'https://picsum.photos/id/81/800/800',
@@ -80,10 +84,15 @@ let images = ref([
 ]);
 
 let priceComputed = computed(()=> {
-    return 29.99;
+    if(product.value && product.value.data){
+        return (product.value.data.price / 100).toString();
+    }
+    return '0.00'
 })
 
 function addToCart(){
-    alert('ADDED');
+    userStore.cart.push(product.value.data);
+    alert("added it!");
+    console.log(userStore.cart)
 }
 </script>

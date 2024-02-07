@@ -69,7 +69,7 @@
                         absolute flex items-center justify-center
                         -right-[3px] top-0 bg-[#ff4646] h-[17px]
                         min-w-[17px] text-xs text-white px-0.5 rounded-full
-                        ">0</span>
+                        ">{{userStore.cart.length}}</span>
                         <div class="min-w-[40px]">
                             <Icon name="ph:shopping-cart-simple-light"
                                   size="33"

@@ -4,32 +4,23 @@
             <div class="mx-auto bg-white rounded-lg p-3">
                 <h1 class="text-xl font-bold mb-2 capitalize">address details</h1>
                 <form @submit.prevent="submit()" class="flex flex-col gap-2">
-                    <TextInput class="w-full" placeholder="Contact Name"
-                        v-model:input="contactName"
-                        inputType="text" :error="error && error.type == 'contactName'? error.message : ''"/>
-                    <TextInput class="w-full" placeholder="Address"
-                        v-model:input="address"
-                        inputType="text" :error="error && error.type == 'address'? error.message : ''"/>
-                    <TextInput class="w-full" placeholder="Zip Code"
-                        v-model:input="zipCode"
-                        inputType="text" :error="error && error.type == 'zipCode'? error.message : ''"/>
-                    <TextInput class="w-full" placeholder="City"
-                        v-model:input="city"
-                        inputType="text" :error="error && error.type == 'city'? error.message : ''"/>
-                    <TextInput 
-                        class="w-full"
-                        placeholder="Country"
-                        v-model:input="country"
-                        inputType="text"
-                        :error="error && error.type == 'country' ? error.message : ''"
-                    />
-                    
+                    <TextInput class="w-full" placeholder="Contact Name" v-model:input="contactName" inputType="text"
+                        :error="error && error.type == 'contactName' ? error.message : ''" />
+                    <TextInput class="w-full" placeholder="Address" v-model:input="address" inputType="text"
+                        :error="error && error.type == 'address' ? error.message : ''" />
+                    <TextInput class="w-full" placeholder="Zip Code" v-model:input="zipCode" inputType="text"
+                        :error="error && error.type == 'zipCode' ? error.message : ''" />
+                    <TextInput class="w-full" placeholder="City" v-model:input="city" inputType="text"
+                        :error="error && error.type == 'city' ? error.message : ''" />
+                    <TextInput class="w-full" placeholder="Country" v-model:input="country" inputType="text"
+                        :error="error && error.type == 'country' ? error.message : ''" />
+
                     <button :disabled="isWorking" type="submit" class="
                         w-full text-white text-[21px] p-1.5 rounded-full bg-gradient-to-r from-[#fe630c] to-[#ff3200] font-semibold
                     ">
-                    <div v-if="!isWorking">update address</div>
-                    <Icon v-else name="eos-icons:loading" size="25" />
-                </button>
+                        <div v-if="!isWorking">update address</div>
+                        <Icon v-else name="eos-icons:loading" size="25" />
+                    </button>
                 </form>
             </div>
         </div>
@@ -39,6 +30,7 @@
 import MainLayout from '~/layouts/MainLayout.vue';
 import { useUserStore } from '~/stores/user';
 const userStore = useUserStore();
+const user = useSupabaseUser()
 let contactName = ref(null)
 let address = ref(null)
 let zipCode = ref(null)
@@ -51,43 +43,82 @@ let isWorking = ref(false)
 let error = ref(null)
 
 
-watchEffect(()=> {
+watchEffect(async () => {
+    currentAddress = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`).data;
+    if (currentAddress.value) {
+        contactName.value = currentAddress.value.contactName;
+        address.value = currentAddress.value.address;
+        zipCode.value = currentAddress.value.zipCode;
+        city.value = currentAddress.value.city;
+        country.value = currentAddress.value.country;
+        isUpdate.value = true;
+    }
     userStore.isLoading = false;
 });
 
-const submit = ()=> {
+const submit = async () => {
     isWorking.value = true;
     error.value = null
-    if(!contactName.value){
+    if (!contactName.value) {
         error.value = {
             type: 'contactName',
             message: 'a contact name is required!'
         };
-    } else if(!address.value){
+    } else if (!address.value) {
         error.value = {
             type: 'address',
             message: 'an address is required!'
         }
-    } else if(!zipCode.value){
+    } else if (!zipCode.value) {
         error.value = {
             type: 'zipCode',
             message: 'a zipCode is required!'
         }
-    } else if(!city.value){
+    } else if (!city.value) {
         error.value = {
             type: 'city',
             message: 'a city is required!'
         }
-    } else if(!country.value){
+    } else if (!country.value) {
         error.value = {
             type: 'country',
             message: 'a country is required!'
         }
     }
-    
-    if(error.value){
+
+    if (error.value) {
         isWorking.value = false;
         return;
     }
+
+    if (isUpdate.value) {
+        await useFetch(`/api/prisma/update-address/${currentAddress.value.id}`, {
+            method: 'PATCH',
+            body: {
+                userId: user.value.id,
+                name: contactName.value,
+                address: address.value,
+                zipcode: zipCode.value,
+                city: city.value,
+                country: country.value
+            }
+        });
+        isWorking.value = false;
+        return navigateTo('/checkout');
+    }
+
+    await useFetch(`/api/prisma/add-address`, {
+            method: 'POST',
+            body: {
+                userId: user.value.id,
+                name: contactName.value,
+                address: address.value,
+                zipcode: zipCode.value,
+                city: city.value,
+                country: country.value
+            }
+        });
+        isWorking.value = false;
+        return navigateTo('/checkout');
 }
 </script>
