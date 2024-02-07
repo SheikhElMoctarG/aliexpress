@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
             country: body.country
         }
     });
-    prisma.products.forEach(async prod=> {
+    body.products.forEach(async prod=> {
         await prisma.orderItem.create({
             data: {
                 orderId: order.id,
