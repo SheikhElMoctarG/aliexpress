@@ -45,7 +45,8 @@ let error = ref(null)
 
 watch(async () => {
     currentAddress.value = await useFetch(`/api/prisma/get-address-by-user/${user.value.id}`);
-    if (currentAddress.value) {
+    console.log(currentAddress.value)
+    if (currentAddress.value && currentAddress.value.data != null) {
         contactName.value = currentAddress.value.data.name;
         address.value = currentAddress.value.data.address;
         zipCode.value = currentAddress.value.data.zipcode;
